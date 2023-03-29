@@ -4,6 +4,9 @@ pub struct TypeChecker<'a> {
     mode: &'a Mod,
 }
 
+#[derive(Debug)]
+pub struct TypeCheckError(String);
+
 impl<'a> TypeChecker<'a> {
     pub fn new(mode: &'a Mod) -> Self {
         Self { mode }
@@ -25,6 +28,10 @@ impl<'a> TypeChecker<'a> {
     fn completely_annotated(stmt: &Located<StmtKind>) -> bool {
         match &stmt.node {
             StmtKind::AnnAssign { .. } => true,
+            StmtKind::Assign { .. } => false,
+            StmtKind::For { body, .. } | StmtKind::ClassDef { body, .. } => {
+                body.iter().all(TypeChecker::completely_annotated)
+            }
             StmtKind::FunctionDef {
                 args,
                 body,
@@ -32,20 +39,10 @@ impl<'a> TypeChecker<'a> {
                 ..
             } => {
                 args.args.iter().all(|arg| arg.node.annotation.is_some())
-                && returns.is_some()
-                && body.iter().all(TypeChecker::completely_annotated)
+                    && returns.is_some()
+                    && body.iter().all(TypeChecker::completely_annotated)
             }
-            StmtKind::Assign { .. } => {
-                eprintln!("unannotated statement found!");
-                std::process::exit(1)
-            }
-            StmtKind::ClassDef {
-                body,
-                ..
-            } => {
-                body.iter().all(TypeChecker::completely_annotated)
-            }
-            _ => true
+            _ => true,
         }
     }
 }

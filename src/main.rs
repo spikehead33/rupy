@@ -7,6 +7,9 @@ use rustpython_parser::{mode, parser};
 use std::env;
 use std::fs::read_to_string;
 
+use crate::codegen::CodeGenerator;
+use inkwell::context::Context;
+
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     let filename = args.get(1).map_or("test.py".to_string(), |x| x.clone());
@@ -16,8 +19,18 @@ fn main() -> Result<()> {
     // make sure type annotation are there
     let tychecker = typechecker::TypeChecker::new(&mode);
     if !tychecker.run() {
-        eprintln!("Fail in Typechecking state");
+        eprintln!("Type checks failed");
     }
-    // println!("{:#?}", mode);
+
+    let context = Context::create();
+    let module = context.create_module("firstmodule");
+    let builder = context.create_builder();
+
+    // println!("context {:#?}", context);
+    // println!();
+    // println!("module {:#?}", module);
+    // println!();
+    // println!("builder {:#?}", builder);
+
     Ok(())
 }
