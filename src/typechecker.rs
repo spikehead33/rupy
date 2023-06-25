@@ -7,6 +7,24 @@ pub struct TypeChecker<'a> {
 #[derive(Debug)]
 pub struct TypeCheckError(String);
 
+impl std::fmt::Display for TypeCheckError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Ok(())
+    }
+}
+
+impl std::error::Error for TypeCheckError {
+    fn description(&self) -> &str {
+        ""
+    }
+    fn cause(&self) -> Option<&dyn std::error::Error> {
+        None
+    }
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        None
+    }
+}
+
 impl<'a> TypeChecker<'a> {
     pub fn new(mode: &'a Mod) -> Self {
         Self { mode }

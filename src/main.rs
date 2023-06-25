@@ -1,14 +1,18 @@
-// mod structures;
 mod codegen;
+mod toplevel;
 mod typechecker;
+mod util;
+
+use codegen::CodeGen;
+use inkwell::context::Context;
+use inkwell::execution_engine::RemoveModuleError;
+use rustpython_ast::Mod;
+use toplevel::TopLevels;
 
 use anyhow::Result;
 use rustpython_parser::{mode, parser};
 use std::env;
 use std::fs::read_to_string;
-
-use crate::codegen::CodeGenerator;
-use inkwell::context::Context;
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
@@ -22,15 +26,15 @@ fn main() -> Result<()> {
         eprintln!("Type checks failed");
     }
 
+    // code generation
     let context = Context::create();
-    let module = context.create_module("firstmodule");
     let builder = context.create_builder();
+    let module = context.create_module("__main__");
+    let codegen = CodeGen::new(&context, module, builder);
 
-    // println!("context {:#?}", context);
-    // println!();
-    // println!("module {:#?}", module);
-    // println!();
-    // println!("builder {:#?}", builder);
+    if let Mod::Module { body, .. } = mode {
+        codegen.codegen_module(&body);
+    }
 
     Ok(())
 }

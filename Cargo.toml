@@ -10,3 +10,5 @@ anyhow = "1.0.70"
 rustpython-ast = "0.2.0"
 rustpython-parser = "0.2.0"
 inkwell = { git = "https://github.com/TheDan64/inkwell", branch = "master", features = ["llvm15-0"] }
+num-bigint = "0.4.3"
+test-case = "3.1.0"

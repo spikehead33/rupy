@@ -10,5 +10,7 @@ import test_import
 
 
 def main() -> None:
-    for i in range(10):
-        print("Hello")
+    x: Integer = 10
+    y: Integer = 100
+    print(x + y)
+    return
