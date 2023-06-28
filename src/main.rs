@@ -2,6 +2,7 @@ mod codegen;
 mod codegen_bk;
 mod toplevel;
 mod typechecker;
+mod strcuture;
 mod util;
 
 use codegen::CodeGen;

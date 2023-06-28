@@ -136,7 +136,7 @@ impl<'ctx> CodeGen<'ctx> {
         f64_type.const_float(val)
     }
 
-    pub fn codegen_binop(&self, bino)
+    // pub fn codegen_binop(&self, bino)
 }
 
 #[cfg(test)]
